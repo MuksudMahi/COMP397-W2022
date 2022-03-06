@@ -10,10 +10,10 @@ public class MapGenerator : MonoBehaviour
     public GameObject goalTile;
 
     [Header("Map Properties")]
-    [Range(2, 30)]
-    public int width = 2;
-    [Range(2, 30)]
-    public int depth = 2;
+    [Range(3, 30)]
+    public int width = 3;
+    [Range(3, 30)]
+    public int depth = 3;
     public Transform parent;
 
     [Header("Generated Tiles")]
@@ -62,9 +62,20 @@ public class MapGenerator : MonoBehaviour
         // place the start tile
         tiles.Add(Instantiate(startTile, Vector3.zero, Quaternion.identity, parent));
 
+        var randomGoalRow= Random.Range(1, depth + 1); 
+        var randomGoalCol= Random.Range(1, width + 1);
+
         // choose a random goal position, cannot be equal the start and cannot be larger than the grid
-        var randomGoalRow = Random.Range(1, depth + 1);
-        var randomGoalCol = Random.Range(1, width + 1);
+        while (true)
+        {
+            if((randomGoalRow==depth||randomGoalCol==width))
+            {
+                break;
+            }
+            randomGoalRow = Random.Range(1, depth + 1);
+            randomGoalCol = Random.Range(1, width + 1);
+        }
+
 
         // generate more tiles if both width and depth are both greater than 2
         for (int row = 1; row <= depth; row++)
