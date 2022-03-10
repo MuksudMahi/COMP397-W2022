@@ -13,6 +13,11 @@ public class UIController : MonoBehaviour
     public TMP_Text HealthBarValue;
 
 
+    public void OnStartButton_Pressed()
+    {
+        SceneManager.LoadScene("Main");
+    }
+
     public void TakeDamage(int damage)
     {
         int health = Int32.Parse(HealthBar.value.ToString());

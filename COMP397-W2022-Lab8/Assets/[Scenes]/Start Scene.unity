@@ -367,7 +367,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1339589959}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1788674779}
+        m_TargetAssemblyTypeName: UIControls, Assembly-CSharp
+        m_MethodName: OnStartButton_Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1339589959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,7 +741,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1788674778}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11dea6a680d887f46afe9e5d391578bb, type: 3}
+  m_Script: {fileID: 11500000, guid: bac26d8155bfb3d45bad593a28c5210c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HealthBar: {fileID: 0}
