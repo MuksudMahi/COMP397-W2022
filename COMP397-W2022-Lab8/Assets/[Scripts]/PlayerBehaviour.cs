@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     public CharacterController controller;
+    public GameObject map;
 
     [Header("Movement")]
     public float maxSpeed = 10.0f;
@@ -61,6 +62,19 @@ public class PlayerBehaviour : MonoBehaviour
         if (isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+        }
+    }
+
+    public void OnYButton_Pressed()
+    {
+        Debug.Log("Y pressed");
+        if(map.activeInHierarchy)
+        {
+            map.SetActive(false);
+        }
+        else
+        {
+            map.SetActive(true);
         }
     }
 

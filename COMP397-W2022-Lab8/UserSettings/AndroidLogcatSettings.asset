@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "emulator-5554",
         "name": "ca.centennialcollege.comp397.lab8",
-        "processId": 3625,
+        "processId": 3521,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -18,6 +18,18 @@
             "deviceId": "emulator-5554",
             "name": "ca.centennialcollege.comp397.lab8",
             "processId": 3625,
+            "exited": false
+        },
+        {
+            "deviceId": "emulator-5554",
+            "name": "ca.centennialcollege.comp397.lab8",
+            "processId": 3240,
+            "exited": false
+        },
+        {
+            "deviceId": "emulator-5554",
+            "name": "ca.centennialcollege.comp397.lab8",
+            "processId": 3521,
             "exited": false
         }
     ],
