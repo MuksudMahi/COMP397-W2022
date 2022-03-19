@@ -262,6 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2005066173}
+  playerDataSO: {fileID: 11400000, guid: d5ec1782c1a38394782be6e77057d05a, type: 2}
 --- !u!1001 &554825527
 PrefabInstance:
   m_ObjectHideFlags: 0

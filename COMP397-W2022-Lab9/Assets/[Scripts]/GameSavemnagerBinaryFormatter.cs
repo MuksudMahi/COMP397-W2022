@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 public class GameSavemnagerBinaryFormatter : MonoBehaviour
 {
     public Transform player;
+    public PlayerDataScriptableObject playerDataSO;
 
     // Update is called once per frame
     void Update()
@@ -36,6 +37,9 @@ public class GameSavemnagerBinaryFormatter : MonoBehaviour
         file.Close();
         Debug.Log("Game data saved!");
         Debug.Log(JsonUtility.ToJson(data));
+        playerDataSO.position = player.position;
+        playerDataSO.rotation = player.rotation;
+        playerDataSO.health = 50;
     }
 
     void LoadGame()
