@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "emulator-5554",
     "m_SelectedPackage": {
         "deviceId": "emulator-5554",
-        "name": "ca.centennialcollege.comp397.lab9",
-        "processId": 3731,
+        "name": "ca.centennialcollege.comp397.lab9.BinaryFormatter",
+        "processId": 4709,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -42,6 +42,18 @@
             "deviceId": "emulator-5554",
             "name": "ca.centennialcollege.comp397.lab9",
             "processId": 3731,
+            "exited": false
+        },
+        {
+            "deviceId": "emulator-5554",
+            "name": "ca.centennialcollege.comp397.lab9",
+            "processId": 4271,
+            "exited": false
+        },
+        {
+            "deviceId": "emulator-5554",
+            "name": "ca.centennialcollege.comp397.lab9.BinaryFormatter",
+            "processId": 4709,
             "exited": false
         }
     ],
