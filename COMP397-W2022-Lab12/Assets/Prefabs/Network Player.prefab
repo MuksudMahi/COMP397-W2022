@@ -132,12 +132,12 @@ MonoBehaviour:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -156,5 +156,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5660af5bbbf31a84793dcd3ea1a70fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  meshRenderer: {fileID: 0}
+  maxSpeed: 10
+  gravity: -30
+  jumpHeight: 3
+  velocity: {x: 0, y: 0, z: 0}
+  groundCheck: {fileID: 0}
+  groundRadius: 0.5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  isGrounded: 0

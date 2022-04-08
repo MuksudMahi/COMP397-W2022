@@ -5,30 +5,46 @@ using UnityEngine;
 
 public class NetworkPlayerBehaviour : NetworkBehaviour
 {
-    public float speed;
-    public MeshRenderer meshRenderer;
+    [Header("Movement")]
+    public float maxSpeed = 10.0f;
+    public float gravity = -30.0f;
+    public float jumpHeight = 3.0f;
+    public Vector3 velocity;
 
-    private NetworkVariable<float> verticalPosition = new NetworkVariable<float>();
-    private NetworkVariable<float> horizontalPosition = new NetworkVariable<float>();
+    [Header("Ground Detection")]
+    public Transform groundCheck;
+    public float groundRadius = 0.5f;
+    public LayerMask groundMask;
+    public bool isGrounded;
 
-    private NetworkVariable<Color> materialColor = new NetworkVariable<Color>();
+    private NetworkVariable<float> remoteVerticalInput = new NetworkVariable<float>();
+    private NetworkVariable<float> remoteHorizontalInput = new NetworkVariable<float>();
+    private NetworkVariable<bool> remoteJumpInput = new NetworkVariable<bool>();
 
-    private float localHorizontal;
-    private float localVertical;
-    private Color localColor;
+    private float localHorizontalInput;
+    private float localVerticalInput;
+    private bool localJumpInput;
 
     void Awake()
     {
-        materialColor.OnValueChanged += ColorOnChange;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
-        RandomSpawnPositionAndColour();
 
-        meshRenderer.material.SetColor("_Color", materialColor.Value);
+        if (!IsLocalPlayer)
+        {
+            GetComponentInChildren<NetworkCameraController>().enabled = false;
+            GetComponentInChildren<Camera>().enabled = false;
+        }
+
+        if (IsServer)
+        {
+            RandomSpawnPosition();
+        }
+
     }
 
     // Update is called once per frame
@@ -40,37 +56,62 @@ public class NetworkPlayerBehaviour : NetworkBehaviour
             ServerUpdate();
         }
 
-        if (IsClient && IsOwner)
+        if (IsOwner)
         {
             // client update
             ClientUpdate();
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+    }
+
+    private void LateUpdate()
+    {
         if (IsLocalPlayer)
         {
-
+            UpdateRotationYServerRPC(transform.eulerAngles.y);
         }
+    }
+
+    [ServerRpc]
+    void UpdateRotationYServerRPC(float newRotationY)
+    {
+        transform.rotation = Quaternion.Euler(0f, newRotationY, 0f);
+    }
+
+    private void Move()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
+
+        if (isGrounded && velocity.y < 0.0f)
+        {
+            velocity.y = -2.0f;
+        }
+
+        Vector3 move = transform.right * remoteHorizontalInput.Value + transform.forward * remoteVerticalInput.Value;
+        GetComponent<CharacterController>().Move(move * maxSpeed * Time.deltaTime);
+
+        if (remoteJumpInput.Value && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        GetComponent<CharacterController>().Move(velocity * Time.deltaTime);
+
     }
 
     void ServerUpdate()
     {
-        transform.position = new Vector3(transform.position.x + horizontalPosition.Value,
-            transform.position.y, transform.position.z + verticalPosition.Value);
-
-        if (meshRenderer.material.GetColor("_Color") != materialColor.Value)
-        {
-            meshRenderer.material.SetColor("_Color", materialColor.Value);
-        }
+        Move();
     }
 
-    public void RandomSpawnPositionAndColour()
+    public void RandomSpawnPosition()
     {
-        var r = Random.Range(0, 1.0f);
-        var g = Random.Range(0, 1.0f);
-        var b = Random.Range(0, 1.0f);
-        var color = new Color(r, g, b);
-        localColor = color;
-
         var x = Random.Range(-3.0f, 3.0f);
         var z = Random.Range(-3.0f, 3.0f);
         transform.position = new Vector3(x, 1.0f, z);
@@ -78,44 +119,29 @@ public class NetworkPlayerBehaviour : NetworkBehaviour
 
     public void ClientUpdate()
     {
-        var horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        var vertical = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        // keyboard Input (fallback)
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        bool isJumping = Input.GetButton("Jump");
 
-
-        // network update
-        if (localHorizontal != horizontal || localVertical != vertical)
+        // check if local variables have changed
+        if (localHorizontalInput != x || localVerticalInput != z || localJumpInput != isJumping)
         {
-            localHorizontal = horizontal;
-            localVertical = vertical;
+            localHorizontalInput = x;
+            localVerticalInput = z;
+            localJumpInput = isJumping;
+
             // update the client position on the network
-            UpdateClientPositionServerRpc(horizontal, vertical);
-        }
-
-        if (localColor != materialColor.Value)
-        {
-            SetClientColorServerRpc(localColor);
+            UpdateClientPositionServerRpc(x, z, isJumping);
         }
     }
 
     [ServerRpc]
-    public void UpdateClientPositionServerRpc(float horizontal, float vertical)
+    public void UpdateClientPositionServerRpc(float horizontal, float vertical, bool isJumping)
     {
-        horizontalPosition.Value = horizontal;
-        verticalPosition.Value = vertical;
-    }
-
-    [ServerRpc]
-    public void SetClientColorServerRpc(Color color)
-    {
-        materialColor.Value = color;
-
-        meshRenderer.material.SetColor("_Color", materialColor.Value);
-
-    }
-
-    void ColorOnChange(Color oldColor, Color newColor)
-    {
-        GetComponent<MeshRenderer>().material.color = materialColor.Value;
+        remoteHorizontalInput.Value = horizontal;
+        remoteVerticalInput.Value = vertical;
+        remoteJumpInput.Value = isJumping;
     }
 
 }
